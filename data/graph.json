@@ -154,7 +154,7 @@
      ]
     },
     {
-     "t": "Epitafium na Powązkach (wg [osoba żyjąca], pokazane przez prof. T. Rudkowskiego 2006): „Bywszy Adiutant Króla Stanisława… Pozostała Żona z Synem…” Pasuje do aktu zgonu (wdowa Regina, syn Józef)",
+     "t": "Epitafium na Powązkach (wg Marka, pokazane przez prof. T. Rudkowskiego 2006): „Bywszy Adiutant Króla Stanisława… Pozostała Żona z Synem…” Pasuje do aktu zgonu (wdowa Regina, syn Józef)",
      "s": "FAM",
      "src": [
       "S83"
@@ -174,7 +174,7 @@
      ]
     },
     {
-     "t": "Wg [osoba żyjąca]: opiekował się pobytem dworu Ludwika XVIII (hrabia de Lille) w Warszawie 1801–1804; Ludwik XVIII, wnuk Marii Leszczyńskiej, płacił za gościnę klejnotami i precjozami, stąd mogły pochodzić obrazy",
+     "t": "Wg Marka: opiekował się pobytem dworu Ludwika XVIII (hrabia de Lille) w Warszawie 1801–1804; Ludwik XVIII, wnuk Marii Leszczyńskiej, płacił za gościnę klejnotami i precjozami, stąd mogły pochodzić obrazy",
      "s": "H",
      "src": [
       "S87"
@@ -189,14 +189,14 @@
      ]
     },
     {
-     "t": "Rodzinna pamiątka: francuska szabla Filipa, później w gabinecie Józefa Fleury w Wilnie (wg [osoba żyjąca])",
+     "t": "Rodzinna pamiątka: francuska szabla Filipa, później w gabinecie Józefa Fleury w Wilnie (wg Marka)",
      "s": "FAM",
      "src": [
       "S87"
      ]
     },
     {
-     "t": "Wg [osoba żyjąca] przodkowie byli wojskowymi, może muszkieterami w Wersalu; niepotwierdzone",
+     "t": "Wg Marka przodkowie byli wojskowymi, może muszkieterami w Wersalu; niepotwierdzone",
      "s": "H",
      "src": [
       "S87"
@@ -577,7 +577,7 @@
      ]
     },
     {
-     "t": "[osoba żyjąca] uważa, że była macochą Heleny. Odpis ślubu z 1884 nazywa jednak Helenę „prawowitą córką Józefa i Marii z Bohdanowiczów”. Może była macochą Stanisława (ur. 1858)? Matka Stanisława nieznana",
+     "t": "Marek uważa, że była macochą Heleny. Odpis ślubu z 1884 nazywa jednak Helenę „prawowitą córką Józefa i Marii z Bohdanowiczów”. Może była macochą Stanisława (ur. 1858)? Matka Stanisława nieznana",
      "s": "H",
      "src": [
       "S77",
@@ -634,7 +634,7 @@
      ]
     },
     {
-     "t": "Brat praprababci [osoba żyjąca] (pra-pra-pradziadek stryjeczny/wujeczny)",
+     "t": "Brat praprababci Piotra (pra-pra-pradziadek stryjeczny/wujeczny)",
      "s": "P",
      "src": [
       "S7"
@@ -657,7 +657,7 @@
      ]
     },
     {
-     "t": "Pamiątki po nim oraz dokumenty rodzinne (m.in. projekt domu przy ul. Połockiej) są w Muzeum Narodowym w Gdańsku (wg [osoba żyjąca])",
+     "t": "Pamiątki po nim oraz dokumenty rodzinne (m.in. projekt domu przy ul. Połockiej) są w Muzeum Narodowym w Gdańsku (wg Marka)",
      "s": "FAM",
      "src": [
       "S82"
@@ -678,7 +678,7 @@
      ]
     },
     {
-     "t": "Wg [osoba żyjąca] francuska szabla Filipa jest opisana we wspomnieniach o Stanisławie; prawdopodobne źródło: J. Andruszkiewicz, „S.F. Fleury… w świetle listów córki, Wacławy Fleury”, w: Wilno i świat, t. 2; także PSB t. 7, s. 37–38",
+     "t": "Wg Marka francuska szabla Filipa jest opisana we wspomnieniach o Stanisławie; prawdopodobne źródło: J. Andruszkiewicz, „S.F. Fleury… w świetle listów córki, Wacławy Fleury”, w: Wilno i świat, t. 2; także PSB t. 7, s. 37–38",
      "s": "FAM",
      "src": [
       "S90"
@@ -893,7 +893,7 @@
      ]
     },
     {
-     "t": "Ślub 12 VII 1884 z Janem (Iwanem) Wygonowskim w kościele św. [osoba żyjąca] i Pawła na Antokolu (Wilno)",
+     "t": "Ślub 12 VII 1884 z Janem (Iwanem) Wygonowskim w kościele św. Piotra i Pawła na Antokolu (Wilno)",
      "s": "C",
      "src": [
       "S77"
@@ -947,7 +947,7 @@
      ]
     },
     {
-     "t": "[osoba żyjąca] potwierdził: pomylił imię, prababcia miała na imię Helena (nie Wacława)",
+     "t": "Marek potwierdził: pomylił imię, prababcia miała na imię Helena (nie Wacława)",
      "s": "FAM",
      "src": [
       "S82"
@@ -1338,7 +1338,7 @@
   },
   {
    "id": "Z3",
-   "name": "Osoba żyjąca",
+   "name": "Marek Zaniewski",
    "sex": "M",
    "status": "C",
    "line": "zaniewski",
@@ -1346,15 +1346,24 @@
    "dates": "",
    "facts": [
     {
-     "t": "Dane ukryte (osoba żyjąca)",
-     "s": "C",
-     "src": []
+     "t": "Ojciec Piotra",
+     "s": "FAM",
+     "src": [
+      "S40"
+     ]
+    },
+    {
+     "t": "Ma rodzinne dokumenty po rosyjsku: akty urodzeń, małżeństw, akty notarialne",
+     "s": "FAM",
+     "src": [
+      "S42"
+     ]
     }
    ]
   },
   {
    "id": "Z4",
-   "name": "Osoba żyjąca",
+   "name": "Piotr Zaniewski",
    "sex": "M",
    "status": "FAM",
    "line": "root",
@@ -1362,8 +1371,8 @@
    "dates": "",
    "facts": [
     {
-     "t": "Dane ukryte (osoba żyjąca)",
-     "s": "C",
+     "t": "Prowadzi to drzewo",
+     "s": "FAM",
      "src": []
     }
    ]
@@ -1614,7 +1623,7 @@
   },
   {
    "id": "R_AleksandraFK",
-   "name": "Osoba żyjąca",
+   "name": "Aleksandra Fleury-Kręgielska",
    "sex": "F",
    "status": "C",
    "line": "fleury",
@@ -1622,8 +1631,8 @@
    "dates": "",
    "facts": [
     {
-     "t": "Dane ukryte (osoba żyjąca)",
-     "s": "C",
+     "t": "Kontakt do kuzynki: może mieć rodzinne archiwum i drzewo. Przez której linii potomków Stanisława? Nieznane",
+     "s": "H",
      "src": []
     }
    ]
@@ -1975,7 +1984,7 @@
    "status": "C",
    "facts": [
     {
-     "t": "„dziadek Feliks i ojciec Tadeusz” [osoba żyjąca]",
+     "t": "„dziadek Feliks i ojciec Tadeusz” Marka",
      "s": "C",
      "src": [
       "S8"
@@ -2310,7 +2319,7 @@
    "u": "https://archivesenligne.meurthe-et-moselle.fr/archives-en-ligne"
   },
   "S40": {
-   "t": "[osoba żyjąca]: wiadomość, 17 XI 2026",
+   "t": "Marek Zaniewski: wiadomość, 17 XI 2026",
    "u": ""
   },
   "S42": {
@@ -2334,7 +2343,7 @@
    "u": "https://biblioteka.vu.lt/e.parodos/vilnius-fotografijose/izanga_fleury_en.htm"
   },
   "S48": {
-   "t": "[osoba żyjąca]: wiadomość, 17 XI 2026 (żona Feliksa i jej rodzice)",
+   "t": "Marek Zaniewski: wiadomość, 17 XI 2026 (żona Feliksa i jej rodzice)",
    "u": ""
   },
   "S49": {
@@ -2354,11 +2363,11 @@
    "u": "http://www.przodkowie.com/niesiecki/w/wygonowski/6948.php?lit=f"
   },
   "S53": {
-   "t": "[osoba żyjąca]: wiadomość, 17 XI 2026 (daty Tadeusza)",
+   "t": "Marek Zaniewski: wiadomość, 17 XI 2026 (daty Tadeusza)",
    "u": ""
   },
   "S54": {
-   "t": "[osoba żyjąca]: wiadomość, 17 XI 2026 (strzelec wyborowy)",
+   "t": "Marek Zaniewski: wiadomość, 17 XI 2026 (strzelec wyborowy)",
    "u": ""
   },
   "S55": {
@@ -2374,7 +2383,7 @@
    "u": "https://zakopane-parafia.grobonet.com/"
   },
   "S58": {
-   "t": "[osoba żyjąca]: wiadomość, 17 XI 2026 (Marcin i Szkoła Rycerska)",
+   "t": "Marek Zaniewski: wiadomość, 17 XI 2026 (Marcin i Szkoła Rycerska)",
    "u": ""
   },
   "S59": {
@@ -2426,7 +2435,7 @@
    "u": "https://groby.cui.wroclaw.pl/"
   },
   "S71": {
-   "t": "[osoba żyjąca]: wiadomość, 17 XI 2026 (Feliks: Warszawa, Wrocław, choroba; Czesława we Wrocławiu)",
+   "t": "Marek Zaniewski: wiadomość, 17 XI 2026 (Feliks: Warszawa, Wrocław, choroba; Czesława we Wrocławiu)",
    "u": ""
   },
   "S72": {
@@ -2442,23 +2451,23 @@
    "u": "https://www.wilnoteka.lt/artykul/premiera-filmu-dokumentalnego-o-stanislawie-filibercie-fleurym-pt-mistrz-scen-rodzajowych"
   },
   "S75": {
-   "t": "[osoba żyjąca]/[osoba żyjąca]: wiadomość, 17 XI 2026 (ekshumacja grobu dziadka)",
+   "t": "Piotr/Marek: wiadomość, 17 XI 2026 (ekshumacja grobu dziadka)",
    "u": ""
   },
   "S76": {
-   "t": "Rodzinny dokument ([osoba żyjąca]): odpis testamentu Józefa (Osipa Martynowicza) Fleury, 11 II 1890, notariusz A. Nieiełow, Wilno; postanowienie Wileńskiego Sądu Okręgowego 3/4 XII 1890, odpis 19 XII 1890",
+   "t": "Rodzinny dokument (Marek): odpis testamentu Józefa (Osipa Martynowicza) Fleury, 11 II 1890, notariusz A. Nieiełow, Wilno; postanowienie Wileńskiego Sądu Okręgowego 3/4 XII 1890, odpis 19 XII 1890",
    "u": ""
   },
   "S77": {
-   "t": "Rodzinny dokument ([osoba żyjąca]): odpis ślubu Jana Wygonowskiego i Heleny Fleury, 12 VII 1884, kościół Antokolski (księga Bernardynów s. 340 nr 31), poświadczony przez Konsystorz Wileński 2 XII 1888",
+   "t": "Rodzinny dokument (Marek): odpis ślubu Jana Wygonowskiego i Heleny Fleury, 12 VII 1884, kościół Antokolski (księga Bernardynów s. 340 nr 31), poświadczony przez Konsystorz Wileński 2 XII 1888",
    "u": ""
   },
   "S78": {
-   "t": "Rodzinny dokument ([osoba żyjąca]): odpis chrztu Czesławy Wygonowskiej, ur. 27 V 1885 (Bernardyni s. 308 nr 122), wydany 26 VII 1894",
+   "t": "Rodzinny dokument (Marek): odpis chrztu Czesławy Wygonowskiej, ur. 27 V 1885 (Bernardyni s. 308 nr 122), wydany 26 VII 1894",
    "u": ""
   },
   "S79": {
-   "t": "Rodzinny dokument ([osoba żyjąca]): testament Marii Fleury 9 X 1891 (Nieiełow 1891 nr 41) i postanowienie Wileńskiego Sądu Okręgowego 1893",
+   "t": "Rodzinny dokument (Marek): testament Marii Fleury 9 X 1891 (Nieiełow 1891 nr 41) i postanowienie Wileńskiego Sądu Okręgowego 1893",
    "u": ""
   },
   "S80": {
@@ -2470,11 +2479,11 @@
    "u": "https://www.familysearch.org/ark:/61903/3:1:3Q9M-CSM1-9QYJ-M?i=515&cat=1546185"
   },
   "S82": {
-   "t": "[osoba żyjąca]: wiadomość, 17 XI 2026 (imię Helena; dokumenty w Muzeum Narodowym w Gdańsku)",
+   "t": "Marek Zaniewski: wiadomość, 17 XI 2026 (imię Helena; dokumenty w Muzeum Narodowym w Gdańsku)",
    "u": ""
   },
   "S83": {
-   "t": "[osoba żyjąca]: mail do eksperta od obrazów (przesłany 17 XI 2026): grób na Powązkach, obrazy, ekspertyzy ASP Kraków 2003 i Łazienki",
+   "t": "Marek Zaniewski: mail do eksperta od obrazów (przesłany 17 XI 2026): grób na Powązkach, obrazy, ekspertyzy ASP Kraków 2003 i Łazienki",
    "u": ""
   },
   "S84": {
@@ -2482,15 +2491,15 @@
    "u": "https://journals.vu.lt/knygotyra/article/download/26956/26337/59909"
   },
   "S85": {
-   "t": "[osoba żyjąca]: wiadomość, 17 XI 2026 (Junevičius o „macosze”; zakład Feliksa: pocztówki, rotograwiura)",
+   "t": "Marek Zaniewski: wiadomość, 17 XI 2026 (Junevičius o „macosze”; zakład Feliksa: pocztówki, rotograwiura)",
    "u": ""
   },
   "S86": {
-   "t": "AD Meurthe-et-Moselle, Nancy Saint-Sébastien, indeks chrztów 1719–1762, 5 Mi 394/R 61 (zrzut [osoba żyjąca], 17 XI 2026)",
+   "t": "AD Meurthe-et-Moselle, Nancy Saint-Sébastien, indeks chrztów 1719–1762, 5 Mi 394/R 61 (zrzut Piotra, 17 XI 2026)",
    "u": "https://archives.meurthe-et-moselle.fr"
   },
   "S87": {
-   "t": "[osoba żyjąca]: wiadomość, 17 XI 2026 (Ludwik XVIII, szabla, AGAD, listy Leszczyńskiego)",
+   "t": "Marek Zaniewski: wiadomość, 17 XI 2026 (Ludwik XVIII, szabla, AGAD, listy Leszczyńskiego)",
    "u": ""
   },
   "S88": {
