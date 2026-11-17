@@ -35,6 +35,7 @@ input{width:160px}
 .node.H text.nm,.node.NN text.nm{font-style:italic;fill:#5e5546}
 .dt{font-size:10.5px;fill:var(--muted)}
 .node.dim,.edge.dim,.union.dim{opacity:.13}
+.myr{font:italic 700 13px "Cormorant Garamond",serif;paint-order:stroke;stroke:var(--bg);stroke-width:4px;stroke-linejoin:round}
 .node.sel .box{stroke:var(--ink)!important;stroke-width:1.6}.node .box{transition:stroke .15s}.node:hover .box{stroke:var(--muted)}
 #panel{position:absolute;top:0;right:0;bottom:0;width:390px;max-width:100%;z-index:6;background:#fff;border-left:1px solid var(--line);transform:translateX(105%);transition:transform .2s;overflow:auto;padding:16px 18px 40px;box-shadow:-6px 0 22px rgba(0,0,0,.07)}
 #panel.open{transform:none}
@@ -81,7 +82,7 @@ li.q{background:#fffbeb;border:1px dashed #f0c27a;border-radius:8px;padding:6px 
    <span><svg width="26" height="8"><line x1="0" y1="4" x2="26" y2="4" stroke="#8a8070" stroke-width="2.2"/></svg>pewne</span>
    <span><svg width="26" height="8"><line x1="0" y1="4" x2="26" y2="4" stroke="#bdb3a1" stroke-width="1.6"/></svg>prawdopodobne</span>
    <span><svg width="26" height="8"><line x1="0" y1="4" x2="26" y2="4" stroke="#c08a3e" stroke-width="1.8" stroke-dasharray="5 4"/></svg>niepotwierdzone</span>
-   <span><svg width="26" height="8"><line x1="0" y1="4" x2="26" y2="4" stroke="#b5566f" stroke-width="2"/></svg>małżeństwo</span>
+   <span><svg width="44" height="18"><line x1="0" y1="9" x2="44" y2="9" stroke="#b5566f" stroke-width="5"/><line x1="0" y1="9" x2="44" y2="9" stroke="#f7f3ea" stroke-width="1.6"/><circle cx="22" cy="9" r="8" fill="#fffdf8" stroke="#b5566f" stroke-width="1.2"/><circle cx="20.2" cy="9" r="3" fill="none" stroke="#b5566f" stroke-width="1.2"/><circle cx="23.8" cy="9" r="3" fill="none" stroke="#b5566f" stroke-width="1.2"/></svg>małżeństwo</span>
    <span><svg width="26" height="8"><line x1="0" y1="4" x2="26" y2="4" stroke="#9ca3af" stroke-width="1.6" stroke-dasharray="1.5 4" stroke-linecap="round"/></svg>krewny?</span>
   </div>
   <div class="row" style="font-size:10px;letter-spacing:.12em;font-weight:600"><span style="color:var(--fleury)">— FLEURY</span><span style="color:var(--zan)">— ZANIEWSKI</span><span style="color:var(--wyg)">— WYGONOWSKI</span><span style="color:var(--inlaw)">— KOLIGACJA</span></div>
@@ -91,7 +92,7 @@ li.q{background:#fffbeb;border:1px dashed #f0c27a;border-radius:8px;padding:6px 
 <script src="vendor/elk.bundled.js"></script>
 <script>
 (async function(){
-const NS="http://www.w3.org/2000/svg", W=184, H=80, U=8, SG=8, SP=8, RH=26, SH=26, SW=208;
+const NS="http://www.w3.org/2000/svg", W=184, H=80, U=22, SG=8, SP=8, RH=26, SH=26, SW=208;
 const msg=document.getElementById('msg');
 let G; try{ G=await (await fetch('data/graph.json',{cache:'no-store'})).json(); window.__G=G; }catch(e){ msg.textContent='Nie udało się wczytać danych drzewa.'; return; }
 if(typeof ELK==='undefined'){ msg.textContent='Nie udało się wczytać silnika układu.'; return; }
@@ -125,7 +126,7 @@ function buildGraph(){
   const ensureU=ids=>{const k=uKey(ids); if(!unions.has(k)){const g=Math.max(...ids.map(i=>P.get(i).gen)); unions.set(k,{id:k,members:ids,gen:g}); nodes.push({id:k,width:U,height:U,x:nodes.length*10,y:(part(g)+1)*100});} return k;};
   // marriages
   E.filter(e=>e.type==='spouse_of'&&V.has(e.from)&&V.has(e.to)).forEach(e=>{
-    const k=ensureU([e.from,e.to]);
+    const k=ensureU([e.from,e.to]); unions.get(k).e=e;
     [e.from,e.to].forEach((m,j)=>{const id='m'+e.i+'_'+j; edges.push({id,sources:[m],targets:[k]}); meta[id]={kind:'spouse',s:e.status,a:m,b:k,e};});
   });
   // children (leaf siblings without known descendants/spouses are stacked vertically)
@@ -215,7 +216,7 @@ async function draw(){ await document.fonts.ready;
     const m=meta[e.id]; const sec=e.sections&&e.sections[0]; if(!sec) return;
     const pts=[sec.startPoint,...(sec.bendPoints||[]),sec.endPoint];
     let stroke=css('--edge'),w=2.2,dash='',cap='butt';
-    if(m.kind==='spouse'){stroke=css('--spouse');w=2;dash=m.s==='C'?'':'5 4';}
+    if(m.kind==='spouse'){stroke=css('--spouse');w=m.s==='C'?5:2.4;dash=m.s==='C'?'':'6 4';}
     else if(m.kind==='relative'){stroke=css('--hyp');w=1.6;dash='1.5 4';cap='round';}
     else if(m.kind==='possible'||m.s==='H'){stroke=css('--edgeH');w=1.8;dash='6 5';}
     else if(m.s==='P'){stroke=css('--edgeP');w=1.6;}
@@ -223,11 +224,19 @@ async function draw(){ await document.fonts.ready;
     if(onLine){w+=1;}
     const ends=[m.a,m.b,...(m.members||[])];
     mk('path',{class:'edge','data-ends':ends.join(' '),d:rounded(pts),fill:'none',stroke,'stroke-width':w,'stroke-dasharray':dash,'stroke-linecap':cap},gE);
+    if(m.kind==='spouse'&&m.s==='C') mk('path',{class:'edge','data-ends':ends.join(' '),d:rounded(pts),fill:'none',stroke:css('--bg'),'stroke-width':1.6},gE);
   });
   // unions
-  unions.forEach(u=>{const n=pos.get(u.id); if(!n) return;
-    mk('circle',{class:'union','data-ends':u.members.join(' '),cx:n.x+U/2,cy:n.y+U/2,r:4.5,fill:'#fff',stroke:css('--spouse'),'stroke-width':2},gU);});
-  // people
+  unions.forEach(u=>{const n=pos.get(u.id); if(!n) return; const x=n.x+U/2, y=n.y+U/2, sc=css('--spouse');
+    const g=mk('g',{class:'union','data-ends':u.members.join(' ')},gU);
+    const conf=!u.e||u.e.status==='C';
+    mk('circle',{cx:x,cy:y,r:10.5,fill:css('--card'),stroke:sc,'stroke-width':1.4,'stroke-dasharray':conf?'':'3 2'},g);
+    mk('circle',{cx:x-2.3,cy:y,r:3.8,fill:'none',stroke:sc,'stroke-width':1.5},g);
+    mk('circle',{cx:x+2.3,cy:y,r:3.8,fill:'none',stroke:sc,'stroke-width':1.5},g);
+    const yr=u.e&&[u.e.date||'',...(u.e.facts||[]).map(f=>f.t)].join(' ').match(/\b1[5-9]\d\d\b/);
+    const tt=mk('title',{},g); tt.textContent='Małżeństwo'+(yr?' · '+yr[0]:'')+(conf?'':' (niepotwierdzone)');
+    if(yr){const t=mk('text',{x:x+15,y:y+4,class:'myr',fill:sc},g); t.textContent=yr[0];}
+  });  // people
   G.people.forEach(p=>{ const n=pos.get(p.id); if(!n||inStack.has(p.id)) return;
     const hyp=isHyp(p)||isNN(p), prob=!hyp&&p.status==='P';
     const g=mk('g',{class:'node '+p.status+(isNN(p)?' NN':''),'data-id':p.id,transform:`translate(${n.x},${n.y})`},gN);
