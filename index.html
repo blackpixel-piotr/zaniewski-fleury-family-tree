@@ -91,7 +91,7 @@ li.q{background:#fffbeb;border:1px dashed #f0c27a;border-radius:8px;padding:6px 
 <script src="vendor/elk.bundled.js"></script>
 <script>
 (async function(){
-const NS="http://www.w3.org/2000/svg", W=184, H=74, U=8, SG=8, SP=8, RH=26, SH=12, SW=208;
+const NS="http://www.w3.org/2000/svg", W=184, H=80, U=8, SG=8, SP=8, RH=26, SH=26, SW=208;
 const msg=document.getElementById('msg');
 let G; try{ G=await (await fetch('data/graph.json',{cache:'no-store'})).json(); window.__G=G; }catch(e){ msg.textContent='Nie udało się wczytać danych drzewa.'; return; }
 if(typeof ELK==='undefined'){ msg.textContent='Nie udało się wczytać silnika układu.'; return; }
@@ -204,8 +204,8 @@ async function draw(){ await document.fonts.ready;
     const g=mk('g',{transform:`translate(${n.x},${n.y})`},gU);
     mk('path',{d:frame(0,0,SW,n.height,8),fill:css('--stack'),stroke:css('--line'),'stroke-width':1.1},g);
     mk('path',{d:frame(4,4,SW-8,n.height-8,6),fill:'none',stroke:css('--line'),'stroke-width':.6,'stroke-dasharray':'2 2'},g);
-    const t=mk('text',{class:'fl',x:SW/2,y:3,'text-anchor':'middle',fill:css('--muted')},g); t.textContent='DZIECI · '+s.members.length;
-    const lw=textW(t)+16; g.insertBefore(mk('rect',{x:SW/2-lw/2,y:-3,width:lw,height:7,fill:css('--bg')}),t);
+    const t=mk('text',{class:'fl',x:SW/2,y:19,'text-anchor':'middle',fill:css('--muted')},g); t.textContent='DZIECI · '+s.members.length;
+    const lw=textW(t)/2+6; [[-1],[1]].forEach(([k])=>mk('line',{x1:SW/2+k*lw,x2:SW/2+k*(lw+12),y1:16.2,y2:16.2,stroke:css('--muted'),'stroke-width':.8},g));
     const tt=mk('title',{},g); tt.textContent='Dzieci, o których potomkach nic nie wiadomo';
     s.members.forEach((id,i)=>stackRows.push({id,x:n.x,y:n.y+SH+i*RH,last:i===s.members.length-1}));});
   model={pos,meta,unions};
@@ -237,17 +237,16 @@ async function draw(){ await document.fonts.ready;
     if(!hyp) mk('path',{d:frame(4,4,W-8,H-8,6),fill:'none',stroke:fr,'stroke-width':.6,'stroke-opacity':dir?.9:.75},g);
     if(dir) mk('path',{d:`M${cx} ${H-4}l4 4l-4 4l-4 -4z`,fill:css('--gold')},g);
     const lab=hyp?'HIPOTEZA':(lineLab[p.line]||'');
-    if(lab){ const lt=mk('text',{class:'fl',x:cx,y:3,'text-anchor':'middle',fill:lc},g); lt.textContent=lab;
-      const lw=textW(lt)+16; g.insertBefore(mk('rect',{x:cx-lw/2,y:-3,width:lw,height:7,fill:css('--bg')}),lt);
-      mk('circle',{cx:cx-lw/2+3,cy:0,r:1.4,fill:lc},g); mk('circle',{cx:cx+lw/2-3,cy:0,r:1.4,fill:lc},g); }
-    const maxW=W-28; let two=false; const t1=mk('text',{class:'nm',x:cx,y:37,'text-anchor':'middle','font-style':hyp?'italic':''},g); t1.textContent=p.name;
+    if(lab){ const lt=mk('text',{class:'fl',x:cx,y:19,'text-anchor':'middle',fill:lc},g); lt.textContent=lab;
+      const lw=textW(lt)/2+6; mk('line',{x1:cx-lw-12,x2:cx-lw,y1:16.2,y2:16.2,stroke:lc,'stroke-width':.8},g); mk('line',{x1:cx+lw,x2:cx+lw+12,y1:16.2,y2:16.2,stroke:lc,'stroke-width':.8},g); }
+    const maxW=W-28; let two=false; const t1=mk('text',{class:'nm',x:cx,y:43,'text-anchor':'middle','font-style':hyp?'italic':''},g); t1.textContent=p.name;
     if(textW(t1)>maxW){const w=p.name.split(' '); let best=null;
       for(let i=1;i<w.length;i++){const a=w.slice(0,i).join(' '),b=w.slice(i).join(' '),sc=Math.max(a.length,b.length); if(!best||sc<best.sc) best={a,b,sc};}
-      if(best){two=true; t1.textContent=best.a; t1.setAttribute('y',29); const t2=mk('text',{class:'nm',x:cx,y:46,'text-anchor':'middle','font-style':hyp?'italic':''},g); t2.textContent=best.b; fitText(t2,maxW,13);}}
+      if(best){two=true; t1.textContent=best.a; t1.setAttribute('y',36); const t2=mk('text',{class:'nm',x:cx,y:52,'text-anchor':'middle','font-style':hyp?'italic':''},g); t2.textContent=best.b; fitText(t2,maxW,13);}}
     fitText(t1,maxW,13);
-    const d=mk('text',{class:'dt',x:cx,y:H-12,'text-anchor':'middle'},g); d.textContent=p.dates||'';
+    const d=mk('text',{class:'dt',x:cx,y:two?H-11:H-14,'text-anchor':'middle'},g); d.textContent=p.dates||'';
     const parts=(p.dates||'').split(' – ');
-    if(textW(d)>W-24&&!two&&parts.length===2){ t1.setAttribute('y',31); d.textContent=parts[0]; d.setAttribute('y',H-23); fitText(d,W-24,9);
+    if(textW(d)>W-24&&!two&&parts.length===2){ t1.setAttribute('y',40); d.textContent=parts[0]; d.setAttribute('y',H-25); fitText(d,W-24,9);
       const d2=mk('text',{class:'dt',x:cx,y:H-11,'text-anchor':'middle'},g); d2.textContent='– '+parts[1]; fitText(d2,W-24,9); }
     else fitText(d,W-24,9);
     const ti=mk('title',{},g); ti.textContent=p.name+(p.dates?' · '+p.dates:'');
