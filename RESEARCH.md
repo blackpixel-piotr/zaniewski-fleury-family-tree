@@ -413,9 +413,9 @@ F2 = 4×, F1 = 5× (praprapraprapradziadek).
 
 ## WORKING RULES ([osoba żyjąca], 2026-11-17)
 1. Claude checks every angle that can be searched online (Geneteka, FamilySearch indexes, Skanoteka, archive catalogues, web) itself and right away. [osoba żyjąca] should not have to remember to ask.
-2. Anything blocked (VPN/geo-block, login, email, phone, photos from [osoba żyjąca]) goes into the PIOTR TODO list below AND into graph.json "todo" (shown under "Do zrobienia" in the tree page). Remove an item when it's done.
+2. Anything blocked (VPN/geo-block, login, email, phone, photos from [osoba żyjąca]) goes into the TODO list below AND into graph.json "todo" (shown under "Do zrobienia" in the tree page). Remove an item when it's done.
 
-## PIOTR TODO (blocked for Claude)
+## TODO (blocked for Claude)
 - T1 [VPN France] Nancy baptism of Filip, 1 V 1745: archives.meurthe-et-moselle.fr, parishes St-Epvre, St-Sébastien, Notre-Dame, St-Roch, St-Nicolas, St-Pierre
 - T2 [FamilySearch login] Wilno 1918 marriage no. 2, Feliks Zaniewski × Czesława Wygonowska (Feliks's parents)
 - T3 [FamilySearch login] Wilno 1914 death no. 335, Jerzy Wygonowski, son of Jan
