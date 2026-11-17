@@ -87,7 +87,7 @@ li.q{background:#fffbeb;border:1px dashed #f0c27a;border-radius:8px;padding:6px 
 <script src="vendor/elk.bundled.js"></script>
 <script>
 (async function(){
-const NS="http://www.w3.org/2000/svg", W=176, H=58, U=8;
+const NS="http://www.w3.org/2000/svg", W=176, H=58, U=8, SG=8, SP=8;
 const msg=document.getElementById('msg');
 let G; try{ G=await (await fetch('data/graph.json',{cache:'no-store'})).json(); window.__G=G; }catch(e){ msg.textContent='Nie udało się wczytać danych drzewa.'; return; }
 if(typeof ELK==='undefined'){ msg.textContent='Nie udało się wczytać silnika układu.'; return; }
@@ -123,21 +123,41 @@ function buildGraph(){
     const k=ensureU([e.from,e.to]);
     [e.from,e.to].forEach((m,j)=>{const id='m'+e.i+'_'+j; edges.push({id,sources:[m],targets:[k]}); meta[id]={kind:'spouse',s:e.status,a:m,b:k,e};});
   });
-  // children
+  // children (leaf siblings without known descendants/spouses are stacked vertically)
   const kids=new Set(E.filter(e=>e.type==='parent_of').map(e=>e.to));
+  const hasOwn=id=>E.some(e=>V.has(e.to)&&V.has(e.from)&&((e.from===id&&(e.type==='parent_of'||e.type==='possible_parent_of'))||(e.type==='spouse_of'&&(e.from===id||e.to===id))));
+  const groups=new Map();
   kids.forEach(c=>{ if(!V.has(c)) return;
     const pe=E.filter(e=>e.type==='parent_of'&&e.to===c&&V.has(e.from));
     if(!pe.length) return;
     const ps=pe.map(e=>e.from);
-    const s=best(pe.map(e=>e.status));
-    if(ps.length>=2){ const k=ensureU(ps.slice(0,2)); const id='c'+c; edges.push({id,sources:[k],targets:[c]}); meta[id]={kind:'child',s,a:k,b:c,pe,members:ps};
-      // keep secondary (lower-confidence) parent link visible as status on panel only
-    } else { const id='c'+c; edges.push({id,sources:[ps[0]],targets:[c]}); meta[id]={kind:'child',s,a:ps[0],b:c,pe,members:ps}; }
+    const src=ps.length>=2?ensureU(ps.slice(0,2)):ps[0];
+    if(!groups.has(src)) groups.set(src,[]);
+    groups.get(src).push({c,pe,ps,s:best(pe.map(e=>e.status))});
   });
-  E.filter(e=>(e.type==='possible_parent_of')&&V.has(e.from)&&V.has(e.to)).forEach(e=>{const id='pp'+e.i; edges.push({id,sources:[e.from],targets:[e.to]}); meta[id]={kind:'possible',s:'H',a:e.from,b:e.to,e};});
+  const stackOf={}; const stacks=new Map();
+  groups.forEach((list,src)=>{
+    const leaves=list.filter(x=>!hasOwn(x.c)&&!direct.has(x.c));
+    if(leaves.length>=2){
+      const sid='S:'+src; const ids=leaves.map(x=>x.c);
+      ids.forEach(id=>stackOf[id]=sid);
+      stacks.set(sid,{id:sid,members:ids});
+      const hgt=leaves.length*H+(leaves.length-1)*SG+2*SP;
+      const ni=nodes.findIndex(n=>n.id===ids[0]); const y=nodes[ni].y;
+      for(let i=nodes.length-1;i>=0;i--) if(ids.includes(nodes[i].id)) nodes.splice(i,1);
+      nodes.push({id:sid,width:W+2*SP,height:hgt,x:nodes.length*10,y});
+      const id='c'+sid; edges.push({id,sources:[src],targets:[sid]});
+      meta[id]={kind:'child',s:best(leaves.map(x=>x.s)),a:src,b:sid,members:[...leaves[0].ps,...ids]};
+      list=list.filter(x=>!ids.includes(x.c));
+    }
+    list.forEach(x=>{const id='c'+x.c; edges.push({id,sources:[src],targets:[x.c]}); meta[id]={kind:'child',s:x.s,a:src,b:x.c,pe:x.pe,members:x.ps};});
+  });
+  const T=id=>stackOf[id]||id;
+  E.filter(e=>(e.type==='possible_parent_of')&&V.has(e.from)&&V.has(e.to)).forEach(e=>{const id='pp'+e.i; edges.push({id,sources:[T(e.from)],targets:[T(e.to)]}); meta[id]={kind:'possible',s:'H',a:e.from,b:e.to,e};});
   E.filter(e=>e.type==='relative_of'&&V.has(e.from)&&V.has(e.to)).forEach(e=>{
     let [a,b]=[e.from,e.to]; if(P.get(a).gen>P.get(b).gen) [a,b]=[b,a];
-    const id='r'+e.i; edges.push({id,sources:[a],targets:[b]}); meta[id]={kind:'relative',s:'H',a,b,e};});
+    if(T(a)===T(b)) return;
+    const id='r'+e.i; edges.push({id,sources:[T(a)],targets:[T(b)]}); meta[id]={kind:'relative',s:'H',a,b,e};});
   return {graph:{id:'root',layoutOptions:{
     'elk.algorithm':'layered','elk.direction':'DOWN','elk.edgeRouting':'ORTHOGONAL',
     'elk.layered.layering.strategy':'INTERACTIVE',
@@ -148,7 +168,7 @@ function buildGraph(){
     'elk.layered.crossingMinimization.strategy':'LAYER_SWEEP',
     'elk.layered.considerModelOrder.strategy':'NODES_AND_EDGES',
     'elk.layered.thoroughness':'40','elk.padding':'[top=20,left=20,bottom=20,right=20]'},
-    children:nodes,edges},unions,meta};
+    children:nodes,edges},unions,meta,stacks};
 }
 
 function rounded(pts,r=7){ let d=`M${pts[0].x} ${pts[0].y}`;
@@ -161,11 +181,14 @@ function wrap(s,n){const w=s.split(' '),L=[];let c='';w.forEach(x=>{if((c+' '+x)
 
 async function draw(){
   msg.style.display='flex';
-  const {graph,unions,meta}=buildGraph();
+  const {graph,unions,meta,stacks}=buildGraph();
   let res; try{ res=await elk.layout(graph); }catch(err){ msg.textContent='Błąd układu: '+err; return; }
   msg.style.display='none';
   gE.innerHTML='';gU.innerHTML='';gN.innerHTML='';
   const pos=new Map(res.children.map(n=>[n.id,n]));
+  stacks.forEach(s=>{const n=pos.get(s.id); if(!n) return;
+    mk('rect',{class:'stack',x:n.x,y:n.y,width:n.width,height:n.height,rx:14,fill:'#f6f7f9',stroke:'#d6d9de','stroke-width':1.2,'data-ends':s.members.join(' ')},gU);
+    s.members.forEach((id,i)=>pos.set(id,{x:n.x+SP,y:n.y+SP+i*(H+SG),width:W,height:H}));});
   model={pos,meta,unions};
   // edges
   const order={relative:0,possible:1,child:2,spouse:3};
