@@ -233,7 +233,7 @@ async function draw(){ await document.fonts.ready;
     mk('circle',{cx:x,cy:y,r:10.5,fill:css('--card'),stroke:sc,'stroke-width':1.4,'stroke-dasharray':conf?'':'3 2'},g);
     mk('circle',{cx:x-2.3,cy:y,r:3.8,fill:'none',stroke:sc,'stroke-width':1.5},g);
     mk('circle',{cx:x+2.3,cy:y,r:3.8,fill:'none',stroke:sc,'stroke-width':1.5},g);
-    let yr=null; if(u.e){ for(const f of (u.e.facts||[])){const m=f.t.match(/^ślub\s+(przed\s+|ok\.\s+|po\s+)?(?:\d{1,2}\s+[IVX]+\s+)?(1[5-9]\d\d)/i); if(m){yr=[(m[1]?m[1].trim()+' ':'')+m[2]];break;}} if(!yr&&u.e.date){const m=String(u.e.date).match(/1[5-9]\d\d/); if(m) yr=[m[0]];} }
+    let yr=null; if(u.e){ for(const f of (u.e.facts||[])){const m=f.t.match(/^ślub\s+((?:przed|ok\.|po)\s+)?((?:\d{1,2}\s+[IVX]+\s+)?1[5-9]\d\d)/i); if(m){yr=[(m[1]?m[1].trim()+' ':'')+m[2]];break;}} if(!yr&&u.e.date){const m=String(u.e.date).match(/1[5-9]\d\d/); if(m) yr=[m[0]];} }
     const tt=mk('title',{},g); tt.textContent='Małżeństwo'+(yr?' · '+yr[0]:'')+(conf?'':' (niepotwierdzone)');
     if(yr){const t=mk('text',{x:x+15,y:y+4,class:'myr',fill:sc},g); t.textContent=yr[0];}
   });  // people
