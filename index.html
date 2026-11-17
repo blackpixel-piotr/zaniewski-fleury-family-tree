@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="color-scheme" content="light">
+<title>Drzewo rodziny Fleury–Zaniewski</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#ffffff;--grid:#f1f3f6;--ink:#1d2430;--muted:#6b7280;--line:#d6dae1;--card:#ffffff;
+  --fleury:#2f5d8a;--zan:#a0522d;--inlaw:#4f7a45;--hyp:#9ca3af;--gold:#d4a017;--wyg:#0f766e;
+  --edge:#5b6472;--edgeP:#9aa3b1;--edgeH:#d08a1f;--spouse:#c2416f;
+  --C:#15803d;--P:#2f5d8a;--H:#d08a1f;--FAM:#7c3aed;--X:#b91c1c;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font:14px/1.45 Inter,system-ui,sans-serif;overflow:hidden}
+#top{position:absolute;top:0;left:0;right:0;z-index:5;display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 12px;background:rgba(255,255,255,.92);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+h1{font:700 22px "Cormorant Garamond",serif;margin:0 8px 0 0;white-space:nowrap}
+button,input{font:inherit;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px 10px}
+button{cursor:pointer}button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+input{width:160px}
+#legend{position:absolute;left:12px;bottom:12px;z-index:5;background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:12px;color:var(--ink);box-shadow:0 4px 16px rgba(0,0,0,.06);max-width:calc(100% - 24px)}
+#legend .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:4px 0}
+#legend.hide .body{display:none}
+#legend svg{position:static;width:auto;height:auto;vertical-align:middle;margin-right:4px}
+#stage{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:grab;
+  background-image:radial-gradient(var(--grid) 1.2px,transparent 1.2px);background-size:22px 22px}
+#stage.drag{cursor:grabbing}
+.node{cursor:pointer}
+.node text{font-family:Inter,sans-serif;pointer-events:none}
+.nm{font-weight:600;font-size:12.5px;fill:var(--ink)}
+.node.H .nm,.node.NN .nm{font-style:italic;fill:#4b5563}
+.dt{font-size:10.5px;fill:var(--muted)}
+.node.dim,.edge.dim,.union.dim{opacity:.13}
+.node.sel .box{stroke-width:3}
+#panel{position:absolute;top:0;right:0;bottom:0;width:390px;max-width:100%;z-index:6;background:#fff;border-left:1px solid var(--line);transform:translateX(105%);transition:transform .2s;overflow:auto;padding:16px 18px 40px;box-shadow:-6px 0 22px rgba(0,0,0,.07)}
+#panel.open{transform:none}
+@media (max-width:700px){#panel{top:auto;left:0;width:100%;height:62%;border-left:0;border-top:1px solid var(--line);border-radius:16px 16px 0 0;transform:translateY(105%)}#panel.open{transform:none}input{width:110px}h1{font-size:19px}}
+#panel h2{font:700 25px/1.1 "Cormorant Garamond",serif;margin:0 30px 4px 0}
+#panel .close{position:absolute;top:10px;right:10px;border:0;font-size:22px;background:none}
+.badge{display:inline-flex;align-items:center;gap:3px;font-size:10.5px;font-weight:700;padding:1px 7px;border-radius:9px;color:#fff;margin-right:6px;vertical-align:1px;white-space:nowrap}
+.b-C{background:var(--C)}.b-P{background:var(--P)}.b-H{background:#fff;color:var(--H);border:1.5px dashed var(--H)}.b-FAM{background:var(--FAM)}.b-X{background:var(--X)}
+#panel h3{font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin:18px 0 6px}
+#panel .todo li{padding:8px 10px;border:1px solid var(--line);border-radius:8px}#panel .tag{display:inline-block;font-size:11px;background:#fff4e0;color:#8a5a00;border-radius:6px;padding:1px 6px;margin-right:6px}
+#panel ul{margin:0;padding:0;list-style:none}
+#panel li{margin:0 0 9px}
+li.q{background:#fffbeb;border:1px dashed #f0c27a;border-radius:8px;padding:6px 8px}
+.src{font-size:11px;margin-top:2px}.src a{color:var(--fleury);margin-right:6px}
+.rel a{color:var(--ink);text-decoration:underline dotted;cursor:pointer}
+.ty{color:var(--muted);font-size:12px}
+.sub{color:var(--muted)}
+#msg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);pointer-events:none}
+</style>
+</head>
+<body>
+<div id="top">
+  <h1>Ród Fleury – Zaniewski</h1>
+  <button id="fit">Dopasuj</button>
+  <button id="hyp" class="on" title="Pokaż/ukryj hipotezy i możliwe gałęzie">Hipotezy</button>
+  <button id="line" title="Tylko linia bezpośrednia">Linia prosta</button>
+  <button id="todo" title="Rzeczy, których nie dało się zrobić automatycznie">Do zrobienia</button>
+  <input id="q" placeholder="Szukaj osoby…" list="names"><datalist id="names"></datalist>
+</div>
+<svg id="stage"><defs>
+  <pattern id="hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="7" height="7" fill="#fbfbfc"/><line x1="0" y1="0" x2="0" y2="7" stroke="#eceef2" stroke-width="3"/></pattern>
+</defs><g id="vp"><g id="edges"></g><g id="unions"></g><g id="nodes"></g></g></svg>
+<div id="msg">Układam drzewo…</div>
+<div id="legend"><div class="row" style="justify-content:space-between;margin:0"><b>Legenda</b><a href="#" id="lt" style="color:var(--muted)">ukryj</a></div>
+ <div class="body">
+  <div class="row">
+   <span><svg width="34" height="18"><rect x="1" y="1" width="32" height="16" rx="4" fill="#fff" stroke="#2f5d8a" stroke-width="1.6"/><circle cx="27" cy="9" r="5" fill="#15803d"/></svg>potwierdzona</span>
+   <span><svg width="34" height="18"><rect x="1" y="1" width="32" height="16" rx="4" fill="#fff" stroke="#2f5d8a" stroke-width="1.2" stroke-opacity=".55"/><circle cx="27" cy="9" r="5" fill="#2f5d8a"/></svg>prawdopodobna</span>
+   <span><svg width="34" height="18"><rect x="1" y="1" width="32" height="16" rx="4" fill="url(#hatch)" stroke="#d08a1f" stroke-width="1.5" stroke-dasharray="4 3"/></svg>hipoteza / nieznana</span>
+   <span><svg width="34" height="18"><rect x="1" y="1" width="32" height="16" rx="4" fill="none" stroke="#d4a017" stroke-width="3"/></svg>linia prosta</span>
+  </div>
+  <div class="row">
+   <span><svg width="26" height="8"><line x1="0" y1="4" x2="26" y2="4" stroke="#5b6472" stroke-width="2.2"/></svg>pewne</span>
+   <span><svg width="26" height="8"><line x1="0" y1="4" x2="26" y2="4" stroke="#9aa3b1" stroke-width="1.6"/></svg>prawdopodobne</span>
+   <span><svg width="26" height="8"><line x1="0" y1="4" x2="26" y2="4" stroke="#d08a1f" stroke-width="1.8" stroke-dasharray="5 4"/></svg>niepotwierdzone</span>
+   <span><svg width="26" height="8"><line x1="0" y1="4" x2="26" y2="4" stroke="#c2416f" stroke-width="2"/></svg>małżeństwo</span>
+   <span><svg width="26" height="8"><line x1="0" y1="4" x2="26" y2="4" stroke="#9ca3af" stroke-width="1.6" stroke-dasharray="1.5 4" stroke-linecap="round"/></svg>krewny?</span>
+  </div>
+  <div class="row" style="color:var(--muted)"><span><span class="badge b-C">✓ C</span>źródło</span><span><span class="badge b-P">≈ P</span>prawdop.</span><span><span class="badge b-H">? H</span>hipoteza</span><span><span class="badge b-FAM">R</span>przekaz rodzinny</span></div>
+ </div></div>
+<div id="panel"><button class="close" id="close">×</button><div id="pc"></div></div>
+<script src="vendor/elk.bundled.js"></script>
+<script>
+(async function(){
+const NS="http://www.w3.org/2000/svg", W=176, H=58, U=8;
+const msg=document.getElementById('msg');
+let G; try{ G=await (await fetch('data/graph.json',{cache:'no-store'})).json(); window.__G=G; }catch(e){ msg.textContent='Nie udało się wczytać danych drzewa.'; return; }
+if(typeof ELK==='undefined'){ msg.textContent='Nie udało się wczytać silnika układu.'; return; }
+const elk=new ELK();
+const P=new Map(G.people.map(p=>[p.id,p]));
+const E=G.edges.map((e,i)=>({...e,i}));
+const st=G.meta.statuses;
+const rank={C:4,FAM:3,P:2,H:1,X:0};
+const best=a=>a.reduce((m,s)=>rank[s]>rank[m]?s:m,'X');
+const isNN=p=>/^NN\b/.test(p.name);
+const isHyp=p=>p.status==='H'||p.line==='hyp';
+const direct=new Set([G.meta.root]);
+(function up(id){E.filter(e=>e.type==='parent_of'&&e.to===id).forEach(e=>{if(!direct.has(e.from)){direct.add(e.from);up(e.from);}})})(G.meta.root);
+let showHyp=true, onlyLine=false, sel=null;
+const spouseOfLine=p=>E.some(e=>e.type==='spouse_of'&&(e.from===p.id&&direct.has(e.to)||e.to===p.id&&direct.has(e.from)));
+const visible=p=>(showHyp||!isHyp(p))&&(!onlyLine||direct.has(p.id)||spouseOfLine(p));
+const lineCol={fleury:'--fleury',zaniewski:'--zan',wygonowski:'--wyg',inlaw:'--inlaw',hyp:'--hyp',root:'--C'};
+const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const vp=document.getElementById('vp'), gE=document.getElementById('edges'), gU=document.getElementById('unions'), gN=document.getElementById('nodes'), svg=document.getElementById('stage');
+const mk=(t,a,p)=>{const el=document.createElementNS(NS,t);for(const k in a) if(a[k]!==undefined&&a[k]!=='') el.setAttribute(k,a[k]); p&&p.appendChild(el); return el;};
+let model=null;
+
+function buildGraph(){
+  const vis=G.people.filter(visible), V=new Set(vis.map(p=>p.id));
+  const minGen=Math.min(...vis.map(p=>p.gen));
+  const part=g=>2*(g-minGen);
+  const nodes=vis.map((p,i)=>({id:p.id,width:W,height:H,x:i*10,y:part(p.gen)*100}));
+  const edges=[]; const unions=new Map(); const meta={};
+  const uKey=ids=>'U:'+[...ids].sort().join('+');
+  const ensureU=ids=>{const k=uKey(ids); if(!unions.has(k)){const g=Math.max(...ids.map(i=>P.get(i).gen)); unions.set(k,{id:k,members:ids,gen:g}); nodes.push({id:k,width:U,height:U,x:nodes.length*10,y:(part(g)+1)*100});} return k;};
+  // marriages
+  E.filter(e=>e.type==='spouse_of'&&V.has(e.from)&&V.has(e.to)).forEach(e=>{
+    const k=ensureU([e.from,e.to]);
+    [e.from,e.to].forEach((m,j)=>{const id='m'+e.i+'_'+j; edges.push({id,sources:[m],targets:[k]}); meta[id]={kind:'spouse',s:e.status,a:m,b:k,e};});
+  });
+  // children
+  const kids=new Set(E.filter(e=>e.type==='parent_of').map(e=>e.to));
+  kids.forEach(c=>{ if(!V.has(c)) return;
+    const pe=E.filter(e=>e.type==='parent_of'&&e.to===c&&V.has(e.from));
+    if(!pe.length) return;
+    const ps=pe.map(e=>e.from);
+    const s=best(pe.map(e=>e.status));
+    if(ps.length>=2){ const k=ensureU(ps.slice(0,2)); const id='c'+c; edges.push({id,sources:[k],targets:[c]}); meta[id]={kind:'child',s,a:k,b:c,pe,members:ps};
+      // keep secondary (lower-confidence) parent link visible as status on panel only
+    } else { const id='c'+c; edges.push({id,sources:[ps[0]],targets:[c]}); meta[id]={kind:'child',s,a:ps[0],b:c,pe,members:ps}; }
+  });
+  E.filter(e=>(e.type==='possible_parent_of')&&V.has(e.from)&&V.has(e.to)).forEach(e=>{const id='pp'+e.i; edges.push({id,sources:[e.from],targets:[e.to]}); meta[id]={kind:'possible',s:'H',a:e.from,b:e.to,e};});
+  E.filter(e=>e.type==='relative_of'&&V.has(e.from)&&V.has(e.to)).forEach(e=>{
+    let [a,b]=[e.from,e.to]; if(P.get(a).gen>P.get(b).gen) [a,b]=[b,a];
+    const id='r'+e.i; edges.push({id,sources:[a],targets:[b]}); meta[id]={kind:'relative',s:'H',a,b,e};});
+  return {graph:{id:'root',layoutOptions:{
+    'elk.algorithm':'layered','elk.direction':'DOWN','elk.edgeRouting':'ORTHOGONAL',
+    'elk.layered.layering.strategy':'INTERACTIVE',
+    'elk.layered.spacing.nodeNodeBetweenLayers':'34','elk.spacing.nodeNode':'26',
+    'elk.layered.spacing.edgeNodeBetweenLayers':'16','elk.layered.spacing.edgeEdgeBetweenLayers':'9',
+    'elk.spacing.edgeNode':'14','elk.spacing.edgeEdge':'8',
+    'elk.layered.nodePlacement.strategy':'NETWORK_SIMPLEX',
+    'elk.layered.crossingMinimization.strategy':'LAYER_SWEEP',
+    'elk.layered.considerModelOrder.strategy':'NODES_AND_EDGES',
+    'elk.layered.thoroughness':'40','elk.padding':'[top=20,left=20,bottom=20,right=20]'},
+    children:nodes,edges},unions,meta};
+}
+
+function rounded(pts,r=7){ let d=`M${pts[0].x} ${pts[0].y}`;
+  for(let i=1;i<pts.length-1;i++){const p=pts[i],a=pts[i-1],b=pts[i+1];
+    const d1=Math.hypot(p.x-a.x,p.y-a.y), d2=Math.hypot(b.x-p.x,b.y-p.y), rr=Math.min(r,d1/2,d2/2);
+    const p1={x:p.x+(a.x-p.x)*rr/d1,y:p.y+(a.y-p.y)*rr/d1}, p2={x:p.x+(b.x-p.x)*rr/d2,y:p.y+(b.y-p.y)*rr/d2};
+    d+=` L${p1.x} ${p1.y} Q${p.x} ${p.y} ${p2.x} ${p2.y}`;}
+  const l=pts[pts.length-1]; return d+` L${l.x} ${l.y}`; }
+function wrap(s,n){const w=s.split(' '),L=[];let c='';w.forEach(x=>{if((c+' '+x).trim().length>n&&c){L.push(c);c=x}else c=(c+' '+x).trim()});L.push(c);return L.length>2?[L[0],L.slice(1).join(' ').slice(0,n-1)+'…']:L;}
+
+async function draw(){
+  msg.style.display='flex';
+  const {graph,unions,meta}=buildGraph();
+  let res; try{ res=await elk.layout(graph); }catch(err){ msg.textContent='Błąd układu: '+err; return; }
+  msg.style.display='none';
+  gE.innerHTML='';gU.innerHTML='';gN.innerHTML='';
+  const pos=new Map(res.children.map(n=>[n.id,n]));
+  model={pos,meta,unions};
+  // edges
+  const order={relative:0,possible:1,child:2,spouse:3};
+  res.edges.sort((a,b)=>order[meta[a.id].kind]-order[meta[b.id].kind]).forEach(e=>{
+    const m=meta[e.id]; const sec=e.sections&&e.sections[0]; if(!sec) return;
+    const pts=[sec.startPoint,...(sec.bendPoints||[]),sec.endPoint];
+    let stroke=css('--edge'),w=2.2,dash='',cap='butt';
+    if(m.kind==='spouse'){stroke=css('--spouse');w=2;dash=m.s==='C'?'':'5 4';}
+    else if(m.kind==='relative'){stroke=css('--hyp');w=1.6;dash='1.5 4';cap='round';}
+    else if(m.kind==='possible'||m.s==='H'){stroke=css('--edgeH');w=1.8;dash='6 5';}
+    else if(m.s==='P'){stroke=css('--edgeP');w=1.6;}
+    const onLine=m.kind==='child'&&direct.has(m.b)&&(m.members||[]).some(x=>direct.has(x));
+    if(onLine){w+=1;}
+    const ends=[m.a,m.b,...(m.members||[])];
+    mk('path',{class:'edge','data-ends':ends.join(' '),d:rounded(pts),fill:'none',stroke,'stroke-width':w,'stroke-dasharray':dash,'stroke-linecap':cap},gE);
+  });
+  // unions
+  unions.forEach(u=>{const n=pos.get(u.id); if(!n) return;
+    mk('circle',{class:'union','data-ends':u.members.join(' '),cx:n.x+U/2,cy:n.y+U/2,r:4.5,fill:'#fff',stroke:css('--spouse'),'stroke-width':2},gU);});
+  // people
+  G.people.forEach(p=>{ const n=pos.get(p.id); if(!n) return;
+    const hyp=isHyp(p)||isNN(p), prob=!hyp&&p.status==='P';
+    const g=mk('g',{class:'node '+p.status+(isNN(p)?' NN':''),'data-id':p.id,transform:`translate(${n.x},${n.y})`},gN);
+    const col=css(lineCol[p.line]||'--line');
+    if(direct.has(p.id)) mk('rect',{x:-4.5,y:-4.5,width:W+9,height:H+9,rx:13,fill:'none',stroke:css('--gold'),'stroke-width':3},g);
+    mk('rect',{class:'box',width:W,height:H,rx:10,fill:hyp?'url(#hatch)':'#fff',stroke:hyp?css('--H'):col,'stroke-width':hyp?1.6:(prob?1.3:1.8),'stroke-opacity':prob?.6:1,'stroke-dasharray':hyp?'5 4':'',filter:''},g);
+    if(!hyp) mk('rect',{x:0,y:0,width:6,height:H,rx:3,fill:col,opacity:prob?.55:1},g);
+    const L=wrap(p.name,24);
+    L.forEach((l,i)=>{const t=mk('text',{class:'nm',x:14,y:L.length===1?25:19+i*15},g); t.textContent=l;});
+    const d=mk('text',{class:'dt',x:14,y:L.length===1?43:H-7},g); d.textContent=(p.dates||'').slice(0,32);
+    // status badge
+    const bx=W-12, by=12;
+    if(p.status==='C'){mk('circle',{cx:bx,cy:by,r:8,fill:css('--C')},g); mk('path',{d:`M${bx-3.6} ${by} l2.6 2.7 l4.8 -5`,stroke:'#fff','stroke-width':2,fill:'none','stroke-linecap':'round','stroke-linejoin':'round'},g);}
+    else if(p.status==='FAM'){mk('circle',{cx:bx,cy:by,r:8,fill:css('--FAM')},g); const t=mk('text',{x:bx,y:by+3.8,'text-anchor':'middle','font-size':10,'font-weight':700,fill:'#fff'},g); t.textContent='R';}
+    else if(p.status==='P'){mk('circle',{cx:bx,cy:by,r:8,fill:css('--P'),opacity:.85},g); const t=mk('text',{x:bx,y:by+4,'text-anchor':'middle','font-size':11,'font-weight':700,fill:'#fff'},g); t.textContent='≈';}
+    else {mk('circle',{cx:bx,cy:by,r:8,fill:'#fff',stroke:css('--H'),'stroke-width':1.6,'stroke-dasharray':'2.5 2'},g); const t=mk('text',{x:bx,y:by+4,'text-anchor':'middle','font-size':11,'font-weight':700,fill:css('--H')},g); t.textContent='?';}
+  });
+  highlight();
+}
+
+function highlight(){
+  const nodes=gN.querySelectorAll('.node'), others=[...gE.querySelectorAll('.edge'),...gU.querySelectorAll('.union')];
+  if(!sel){nodes.forEach(n=>n.classList.remove('dim','sel'));others.forEach(e=>e.classList.remove('dim'));return;}
+  const nb=new Set([sel]); E.forEach(e=>{if(e.from===sel)nb.add(e.to); if(e.to===sel)nb.add(e.from);});
+  nodes.forEach(n=>{n.classList.toggle('dim',!nb.has(n.dataset.id)); n.classList.toggle('sel',n.dataset.id===sel);});
+  others.forEach(e=>{const ends=e.dataset.ends.split(' ');e.classList.toggle('dim',!ends.includes(sel));});
+}
+
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const badge=s=>`<span class="badge b-${s}">${{C:'✓ C',P:'≈ P',H:'? H',FAM:'R',X:'✗ X'}[s]||s}</span>`;
+function srcHtml(a){return (a||[]).map(s=>{const o=G.sources[s]; if(!o) return esc(s); return o.u?`<a href="${esc(o.u)}" target="_blank" rel="noopener">${esc(s)}: ${esc(o.t)}</a>`:`<span>${esc(s)}: ${esc(o.t)}</span>`;}).join(' ');}
+function factList(f,q){return f&&f.length?'<ul>'+f.map(x=>`<li class="${q?'q':''}">${badge(x.s)}${esc(x.t)}${x.src&&x.src.length?`<div class="src">${srcHtml(x.src)}</div>`:''}</li>`).join('')+'</ul>':'<div class="sub">brak</div>';}
+const relName=(e,id)=>{const out=e.from===id; switch(e.type){case 'parent_of':return out?'dziecko':'rodzic';case 'possible_parent_of':return out?'możliwe dziecko':'możliwy rodzic';case 'spouse_of':return 'małżonek';default:return 'możliwy krewny';}};
+function select(id){
+  sel=id; const p=P.get(id); highlight();
+  const rels=E.filter(e=>e.from===id||e.to===id);
+  const conf=p.facts.filter(f=>f.s!=='H'&&f.s!=='X'), q=p.facts.filter(f=>f.s==='H'||f.s==='X');
+  document.getElementById('pc').innerHTML=`<h2>${esc(p.name)}</h2><div class="sub">${esc(p.dates||'')}</div>
+    <div style="margin-top:8px">${badge(p.status)}<span class="sub">${esc(st[p.status]||'')}${direct.has(id)?' · linia prosta':''}</span></div>
+    <h3>Fakty</h3>${factList(conf)}
+    <h3>Możliwe gałęzie i pytania</h3>${factList(q,true)}
+    <h3>Relacje</h3><ul class="rel">${rels.map(e=>{const o=e.from===id?e.to:e.from, op=P.get(o);
+      return `<li>${badge(e.status)}<span class="ty">${relName(e,id)}:</span> <a data-go="${o}">${esc(op?op.name:o)}</a>${e.facts&&e.facts.length?'<div class="src">'+e.facts.map(f=>esc(f.t)+' '+srcHtml(f.src)).join('<br>')+'</div>':''}</li>`;}).join('')}</ul>
+    <div class="sub" style="margin-top:14px;font-size:11px">ID: ${esc(id)}</div>`;
+  document.querySelectorAll('[data-go]').forEach(a=>a.onclick=()=>{const g=a.dataset.go; if(!visible(P.get(g))){showHyp=true;onlyLine=false;hb.classList.add('on');lb.classList.remove('on');draw().then(()=>{select(g);center(g);});} else {select(g);center(g);}});
+  document.getElementById('panel').classList.add('open');
+  try{history.replaceState(null,'','#'+id.replace(/_/g,'-'));}catch(e){}
+}
+function unselect(){sel=null;highlight();document.getElementById('panel').classList.remove('open');try{history.replaceState(null,'',location.pathname+location.search);}catch(e){}}
+
+let T={x:0,y:0,k:1}; const apply=()=>vp.setAttribute('transform',`translate(${T.x},${T.y}) scale(${T.k})`);
+function bounds(){const ns=G.people.map(p=>model.pos.get(p.id)).filter(Boolean);return{minX:Math.min(...ns.map(n=>n.x)),maxX:Math.max(...ns.map(n=>n.x+W)),minY:Math.min(...ns.map(n=>n.y)),maxY:Math.max(...ns.map(n=>n.y+H))};}
+function fit(){const b=bounds(),r=svg.getBoundingClientRect(),top=70,bot=20;
+  T.k=Math.min((r.width-40)/(b.maxX-b.minX),(r.height-top-bot)/(b.maxY-b.minY),1.2);
+  T.x=(r.width-(b.maxX-b.minX)*T.k)/2-b.minX*T.k; T.y=top+((r.height-top-bot)-(b.maxY-b.minY)*T.k)/2-b.minY*T.k; apply();}
+function center(id){const n=model.pos.get(id); if(!n) return; const r=svg.getBoundingClientRect(); T.k=Math.max(T.k,.85);
+  const open=document.getElementById('panel').classList.contains('open'), pw=open&&r.width>700?390:0, ph=open&&r.width<=700?r.height*.62:0;
+  T.x=(r.width-pw)/2-(n.x+W/2)*T.k; T.y=(r.height-ph)/2+20-(n.y+H/2)*T.k; apply();}
+const pts=new Map(); let last=null, moved=false, pinch=null;
+svg.addEventListener('pointerdown',e=>{svg.setPointerCapture(e.pointerId);pts.set(e.pointerId,{x:e.clientX,y:e.clientY});moved=false;
+  if(pts.size===2){const [a,b]=[...pts.values()];pinch={d:Math.hypot(a.x-b.x,a.y-b.y),k:T.k,mx:(a.x+b.x)/2,my:(a.y+b.y)/2,tx:T.x,ty:T.y};}else last={x:e.clientX,y:e.clientY}; svg.classList.add('drag');});
+svg.addEventListener('pointermove',e=>{if(!pts.has(e.pointerId))return;pts.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  if(pts.size===2&&pinch){const [a,b]=[...pts.values()];const d=Math.hypot(a.x-b.x,a.y-b.y);const k=Math.min(3,Math.max(.12,pinch.k*d/pinch.d));T.x=pinch.mx-(pinch.mx-pinch.tx)*k/pinch.k;T.y=pinch.my-(pinch.my-pinch.ty)*k/pinch.k;T.k=k;apply();moved=true;}
+  else if(last){const dx=e.clientX-last.x,dy=e.clientY-last.y;if(Math.abs(dx)+Math.abs(dy)>3)moved=true;T.x+=dx;T.y+=dy;last={x:e.clientX,y:e.clientY};apply();}});
+const end=e=>{ if(e.type==='pointerup'&&!moved&&pts.size===1){const el=document.elementFromPoint(e.clientX,e.clientY);const n=el&&el.closest&&el.closest('g.node'); n?select(n.dataset.id):unselect();}
+  pts.delete(e.pointerId); if(pts.size<2)pinch=null; if(!pts.size){last=null;svg.classList.remove('drag');}};
+svg.addEventListener('pointerup',end); svg.addEventListener('pointercancel',end);
+svg.addEventListener('wheel',e=>{e.preventDefault();const r=svg.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top;const k=Math.min(3,Math.max(.12,T.k*Math.exp(-e.deltaY*.0015)));T.x=mx-(mx-T.x)*k/T.k;T.y=my-(my-T.y)*k/T.k;T.k=k;apply();},{passive:false});
+
+document.getElementById('fit').onclick=fit;
+document.getElementById('todo').onclick=()=>{const T=(window.__G&&__G.todo)||[];sel=null;highlight();
+ document.getElementById('pc').innerHTML='<h2>Do zrobienia</h2><p style="color:var(--muted);margin:4px 0 0">Rzeczy, których nie da się zrobić automatycznie (VPN, konto, mail, zdjęcia). Resztę wyszukuję sam.</p><h3>Lista</h3><ul class="todo">'+T.map(t=>'<li><span class="tag">'+t.why+'</span>'+t.t+(t.u?' <a href="'+t.u+'" target="_blank" rel="noopener">link</a>':'')+'</li>').join('')+'</ul>';
+ document.getElementById('panel').classList.add('open');};
+
+document.getElementById('close').onclick=unselect;
+const hb=document.getElementById('hyp'), lb=document.getElementById('line');
+hb.onclick=async()=>{showHyp=!showHyp;hb.classList.toggle('on',showHyp);if(sel&&!visible(P.get(sel)))unselect();await draw();fit();};
+lb.onclick=async()=>{onlyLine=!onlyLine;lb.classList.toggle('on',onlyLine);if(sel&&!visible(P.get(sel)))unselect();await draw();fit();};
+document.getElementById('lt').onclick=e=>{e.preventDefault();const l=document.getElementById('legend');l.classList.toggle('hide');e.target.textContent=l.classList.contains('hide')?'pokaż':'ukryj';};
+const dl=document.getElementById('names'); G.people.forEach(p=>{const o=document.createElement('option');o.value=p.name;dl.appendChild(o);});
+document.getElementById('q').addEventListener('change',async e=>{const v=e.target.value.toLowerCase();const p=G.people.find(p=>p.name.toLowerCase().includes(v));if(!p)return;if(!visible(p)){showHyp=true;onlyLine=false;hb.classList.add('on');lb.classList.remove('on');await draw();}select(p.id);center(p.id);});
+window.addEventListener('hashchange',()=>{const id=location.hash.slice(1).replace(/-/g,'_');if(P.has(id)){select(id);center(id);}});
+
+await draw(); fit();
+if(innerWidth<700){document.getElementById('legend').classList.add('hide');document.getElementById('lt').textContent='pokaż'; if(T.k<.5){T.k=.6;const n=model.pos.get(G.meta.root),r=svg.getBoundingClientRect();T.x=r.width/2-(n.x+W/2)*T.k;T.y=r.height-110-(n.y)*T.k;apply();}}
+const h=location.hash.slice(1).replace(/-/g,'_'); if(P.has(h)){select(h);center(h);}
+})();
+</script>
+</body>
+</html>
