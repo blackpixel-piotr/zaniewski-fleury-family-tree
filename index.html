@@ -255,7 +255,7 @@ const end=e=>{ if(e.type==='pointerup'&&!moved&&pts.size===1){const el=document.
 svg.addEventListener('pointerup',end); svg.addEventListener('pointercancel',end);
 svg.addEventListener('wheel',e=>{e.preventDefault();const r=svg.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top;const k=Math.min(3,Math.max(.12,T.k*Math.exp(-e.deltaY*.0015)));T.x=mx-(mx-T.x)*k/T.k;T.y=my-(my-T.y)*k/T.k;T.k=k;apply();},{passive:false});
 
-document.getElementById('fit').onclick=fit;
+document.getElementById('fit').onclick=fit;if(!(window.__G&&__G.todo&&__G.todo.length))document.getElementById('todo').style.display='none';
 document.getElementById('todo').onclick=()=>{const T=(window.__G&&__G.todo)||[];sel=null;highlight();
  document.getElementById('pc').innerHTML='<h2>Do zrobienia</h2><p style="color:var(--muted);margin:4px 0 0">Rzeczy, których nie da się zrobić automatycznie (VPN, konto, mail, zdjęcia). Resztę wyszukuję sam.</p><h3>Lista</h3><ul class="todo">'+T.map(t=>'<li><span class="tag">'+t.why+'</span>'+t.t+(t.u?' <a href="'+t.u+'" target="_blank" rel="noopener">link</a>':'')+'</li>').join('')+'</ul>';
  document.getElementById('panel').classList.add('open');};

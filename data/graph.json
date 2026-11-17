@@ -840,6 +840,21 @@
      "src": [
       "S3"
      ]
+    },
+    {
+     "t": "Córka Stanisława Filiberta; mieszkała w Sopocie; jej wspomnienia i listy są głównym źródłem o ojcu (film TVP, artykuł J. Andruszkiewicz)",
+     "s": "C",
+     "src": [
+      "S89",
+      "S90"
+     ]
+    },
+    {
+     "t": "Wyjaśnia rodzinne „Wacława”: to imię córki Stanisława, a nie jego siostry Heleny Wygonowskiej",
+     "s": "P",
+     "src": [
+      "S89"
+     ]
     }
    ]
   },
@@ -1658,32 +1673,6 @@
      "src": []
     }
    ]
-  },
-  {
-   "id": "F4c_Waclawa",
-   "name": "Wacława Fleury",
-   "sex": "F",
-   "status": "C",
-   "line": "fleury",
-   "gen": 5,
-   "dates": "? – ? (Sopot)",
-   "facts": [
-    {
-     "t": "Córka Stanisława Filiberta; mieszkała w Sopocie; jej wspomnienia i listy są głównym źródłem o ojcu (film TVP, artykuł J. Andruszkiewicz)",
-     "s": "C",
-     "src": [
-      "S89",
-      "S90"
-     ]
-    },
-    {
-     "t": "Wyjaśnia rodzinne „Wacława”: to imię córki Stanisława, a nie jego siostry Heleny Wygonowskiej",
-     "s": "P",
-     "src": [
-      "S89"
-     ]
-    }
-   ]
   }
  ],
  "edges": [
@@ -2210,21 +2199,6 @@
      "s": "H",
      "src": [
       "S86"
-     ]
-    }
-   ]
-  },
-  {
-   "type": "parent_of",
-   "from": "F4",
-   "to": "F4c_Waclawa",
-   "status": "C",
-   "facts": [
-    {
-     "t": "„jego córki Wacławy, która mieszkała w Sopocie”",
-     "s": "C",
-     "src": [
-      "S89"
      ]
     }
    ]
