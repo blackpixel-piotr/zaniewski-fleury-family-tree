@@ -8,19 +8,19 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#ffffff;--grid:#f1f3f6;--ink:#1d2430;--muted:#6b7280;--line:#d6dae1;--card:#ffffff;
-  --fleury:#2f5d8a;--zan:#a0522d;--inlaw:#4f7a45;--hyp:#9ca3af;--gold:#d4a017;--wyg:#0f766e;
-  --edge:#5b6472;--edgeP:#9aa3b1;--edgeH:#d08a1f;--spouse:#c2416f;
-  --C:#15803d;--P:#2f5d8a;--H:#d08a1f;--FAM:#7c3aed;--X:#b91c1c;
+  --bg:#f7f3ea;--grid:#e6dccb;--ink:#2a2620;--muted:#7a705f;--line:#ddd3bf;--card:#fffdf8;--stack:#efe8da;
+  --fleury:#4b6a8a;--zan:#9a5a3a;--inlaw:#6b7a4c;--hyp:#9a917f;--gold:#b8892b;--wyg:#3d7a72;
+  --edge:#8a8070;--edgeP:#bdb3a1;--edgeH:#c08a3e;--spouse:#b5566f;
+  --C:#3f7a4f;--P:#4b6a8a;--H:#c08a3e;--FAM:#7a5a9a;--X:#b91c1c;
 }
 *{box-sizing:border-box}
 html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font:14px/1.45 Inter,system-ui,sans-serif;overflow:hidden}
-#top{position:absolute;top:0;left:0;right:0;z-index:5;display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 12px;background:rgba(255,255,255,.92);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
-h1{font:700 22px "Cormorant Garamond",serif;margin:0 8px 0 0;white-space:nowrap}
-button,input{font:inherit;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px 10px}
+#top{position:absolute;top:0;left:0;right:0;z-index:5;display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:12px 16px;background:rgba(247,243,234,.94);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+h1{font:700 24px "Cormorant Garamond",serif;margin:0 12px 0 0;white-space:nowrap;letter-spacing:.01em}
+button,input{font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px 10px}
 button{cursor:pointer}button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
 input{width:160px}
-#legend{position:absolute;left:12px;bottom:12px;z-index:5;background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:12px;color:var(--ink);box-shadow:0 4px 16px rgba(0,0,0,.06);max-width:calc(100% - 24px)}
+#legend{position:absolute;left:12px;bottom:12px;z-index:5;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:12px;color:var(--ink);box-shadow:0 4px 16px rgba(0,0,0,.06);max-width:calc(100% - 24px)}
 #legend .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:4px 0}
 #legend.hide .body{display:none}
 #legend svg{position:static;width:auto;height:auto;vertical-align:middle;margin-right:4px}
@@ -29,11 +29,13 @@ input{width:160px}
 #stage.drag{cursor:grabbing}
 .node{cursor:pointer}
 .node text{font-family:Inter,sans-serif;pointer-events:none}
-.nm{font-weight:600;font-size:12.5px;fill:var(--ink)}
-.node.H .nm,.node.NN .nm{font-style:italic;fill:#4b5563}
+.node text.nm{font:700 17px "Cormorant Garamond",serif;fill:var(--ink)}.fl{font-size:8px;font-weight:600;letter-spacing:.16em}
+.node text.rn{font:700 15px "Cormorant Garamond",serif;fill:var(--ink)}.ry{font-size:10px;fill:var(--muted)}.sh{font-size:9.5px;font-weight:600;letter-spacing:.06em;fill:var(--muted)}
+.row .hit{fill:transparent}.row:hover .hit{fill:#ebe5da}.row.sel .hit{fill:#e3dccd}
+.node.H text.nm,.node.NN text.nm{font-style:italic;fill:#5e5546}
 .dt{font-size:10.5px;fill:var(--muted)}
 .node.dim,.edge.dim,.union.dim{opacity:.13}
-.node.sel .box{stroke-width:3}
+.node.sel .box{stroke:var(--ink)!important;stroke-width:1.6}.node .box{transition:stroke .15s}.node:hover .box{stroke:var(--muted)}
 #panel{position:absolute;top:0;right:0;bottom:0;width:390px;max-width:100%;z-index:6;background:#fff;border-left:1px solid var(--line);transform:translateX(105%);transition:transform .2s;overflow:auto;padding:16px 18px 40px;box-shadow:-6px 0 22px rgba(0,0,0,.07)}
 #panel.open{transform:none}
 @media (max-width:700px){#panel{top:auto;left:0;width:100%;height:62%;border-left:0;border-top:1px solid var(--line);border-radius:16px 16px 0 0;transform:translateY(105%)}#panel.open{transform:none}input{width:110px}h1{font-size:19px}}
@@ -63,31 +65,33 @@ li.q{background:#fffbeb;border:1px dashed #f0c27a;border-radius:8px;padding:6px 
   <input id="q" placeholder="Szukaj osoby…" list="names"><datalist id="names"></datalist>
 </div>
 <svg id="stage"><defs>
+  <filter id="sh" x="-10%" y="-10%" width="120%" height="140%"><feDropShadow dx="0" dy="1" stdDeviation="1.4" flood-color="#3b2f1e" flood-opacity=".10"/></filter>
   <pattern id="hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="7" height="7" fill="#fbfbfc"/><line x1="0" y1="0" x2="0" y2="7" stroke="#eceef2" stroke-width="3"/></pattern>
 </defs><g id="vp"><g id="edges"></g><g id="unions"></g><g id="nodes"></g></g></svg>
 <div id="msg">Układam drzewo…</div>
 <div id="legend"><div class="row" style="justify-content:space-between;margin:0"><b>Legenda</b><a href="#" id="lt" style="color:var(--muted)">ukryj</a></div>
  <div class="body">
   <div class="row">
-   <span><svg width="34" height="18"><rect x="1" y="1" width="32" height="16" rx="4" fill="#fff" stroke="#2f5d8a" stroke-width="1.6"/><circle cx="27" cy="9" r="5" fill="#15803d"/></svg>potwierdzona</span>
-   <span><svg width="34" height="18"><rect x="1" y="1" width="32" height="16" rx="4" fill="#fff" stroke="#2f5d8a" stroke-width="1.2" stroke-opacity=".55"/><circle cx="27" cy="9" r="5" fill="#2f5d8a"/></svg>prawdopodobna</span>
-   <span><svg width="34" height="18"><rect x="1" y="1" width="32" height="16" rx="4" fill="url(#hatch)" stroke="#d08a1f" stroke-width="1.5" stroke-dasharray="4 3"/></svg>hipoteza / nieznana</span>
-   <span><svg width="34" height="18"><rect x="1" y="1" width="32" height="16" rx="4" fill="none" stroke="#d4a017" stroke-width="3"/></svg>linia prosta</span>
+   <span><svg width="34" height="18"><rect x="1" y="1" width="32" height="16" rx="3" fill="#fffdf8" stroke="#ddd3bf"/><circle cx="26" cy="9" r="4.5" fill="#3f7a4f"/></svg>potwierdzona</span>
+   <span><svg width="34" height="18"><rect x="1" y="1" width="32" height="16" rx="3" fill="#fffdf8" stroke="#ddd3bf" stroke-opacity=".7"/><circle cx="26" cy="9" r="4.5" fill="#4b6a8a"/></svg>prawdopodobna</span>
+   <span><svg width="34" height="18"><rect x="1" y="1" width="32" height="16" rx="4" fill="url(#hatch)" stroke="#c08a3e" stroke-width="1.3" stroke-dasharray="4 3"/></svg>hipoteza / nieznana</span>
+   <span><svg width="34" height="18"><rect x="1" y="1" width="32" height="16" rx="3" fill="#fffdf8" stroke="#b8892b" stroke-width="1.4"/><rect x="3.5" y="3.5" width="27" height="11" rx="2" fill="none" stroke="#b8892b" stroke-width=".6"/></svg>linia prosta</span>
   </div>
   <div class="row">
-   <span><svg width="26" height="8"><line x1="0" y1="4" x2="26" y2="4" stroke="#5b6472" stroke-width="2.2"/></svg>pewne</span>
-   <span><svg width="26" height="8"><line x1="0" y1="4" x2="26" y2="4" stroke="#9aa3b1" stroke-width="1.6"/></svg>prawdopodobne</span>
-   <span><svg width="26" height="8"><line x1="0" y1="4" x2="26" y2="4" stroke="#d08a1f" stroke-width="1.8" stroke-dasharray="5 4"/></svg>niepotwierdzone</span>
-   <span><svg width="26" height="8"><line x1="0" y1="4" x2="26" y2="4" stroke="#c2416f" stroke-width="2"/></svg>małżeństwo</span>
+   <span><svg width="26" height="8"><line x1="0" y1="4" x2="26" y2="4" stroke="#8a8070" stroke-width="2.2"/></svg>pewne</span>
+   <span><svg width="26" height="8"><line x1="0" y1="4" x2="26" y2="4" stroke="#bdb3a1" stroke-width="1.6"/></svg>prawdopodobne</span>
+   <span><svg width="26" height="8"><line x1="0" y1="4" x2="26" y2="4" stroke="#c08a3e" stroke-width="1.8" stroke-dasharray="5 4"/></svg>niepotwierdzone</span>
+   <span><svg width="26" height="8"><line x1="0" y1="4" x2="26" y2="4" stroke="#b5566f" stroke-width="2"/></svg>małżeństwo</span>
    <span><svg width="26" height="8"><line x1="0" y1="4" x2="26" y2="4" stroke="#9ca3af" stroke-width="1.6" stroke-dasharray="1.5 4" stroke-linecap="round"/></svg>krewny?</span>
   </div>
+  <div class="row" style="font-size:10px;letter-spacing:.12em;font-weight:600"><span style="color:var(--fleury)">— FLEURY</span><span style="color:var(--zan)">— ZANIEWSKI</span><span style="color:var(--wyg)">— WYGONOWSKI</span><span style="color:var(--inlaw)">— KOLIGACJA</span></div>
   <div class="row" style="color:var(--muted)"><span><span class="badge b-C">✓ C</span>źródło</span><span><span class="badge b-P">≈ P</span>prawdop.</span><span><span class="badge b-H">? H</span>hipoteza</span><span><span class="badge b-FAM">R</span>przekaz rodzinny</span></div>
  </div></div>
 <div id="panel"><button class="close" id="close">×</button><div id="pc"></div></div>
 <script src="vendor/elk.bundled.js"></script>
 <script>
 (async function(){
-const NS="http://www.w3.org/2000/svg", W=176, H=58, U=8, SG=8, SP=8;
+const NS="http://www.w3.org/2000/svg", W=184, H=74, U=8, SG=8, SP=8, RH=26, SH=12, SW=208;
 const msg=document.getElementById('msg');
 let G; try{ G=await (await fetch('data/graph.json',{cache:'no-store'})).json(); window.__G=G; }catch(e){ msg.textContent='Nie udało się wczytać danych drzewa.'; return; }
 if(typeof ELK==='undefined'){ msg.textContent='Nie udało się wczytać silnika układu.'; return; }
@@ -104,6 +108,7 @@ const direct=new Set([G.meta.root]);
 let showHyp=true, onlyLine=false, sel=null;
 const spouseOfLine=p=>E.some(e=>e.type==='spouse_of'&&(e.from===p.id&&direct.has(e.to)||e.to===p.id&&direct.has(e.from)));
 const visible=p=>(showHyp||!isHyp(p))&&(!onlyLine||direct.has(p.id)||spouseOfLine(p));
+const lineLab={fleury:'FLEURY',zaniewski:'ZANIEWSKI',wygonowski:'WYGONOWSKI',inlaw:'KOLIGACJA',hyp:'HIPOTEZA',root:'ZANIEWSKI'};
 const lineCol={fleury:'--fleury',zaniewski:'--zan',wygonowski:'--wyg',inlaw:'--inlaw',hyp:'--hyp',root:'--C'};
 const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
 const vp=document.getElementById('vp'), gE=document.getElementById('edges'), gU=document.getElementById('unions'), gN=document.getElementById('nodes'), svg=document.getElementById('stage');
@@ -142,10 +147,10 @@ function buildGraph(){
       const sid='S:'+src; const ids=leaves.map(x=>x.c);
       ids.forEach(id=>stackOf[id]=sid);
       stacks.set(sid,{id:sid,members:ids});
-      const hgt=leaves.length*H+(leaves.length-1)*SG+2*SP;
+      const hgt=SH+leaves.length*RH+8;
       const ni=nodes.findIndex(n=>n.id===ids[0]); const y=nodes[ni].y;
       for(let i=nodes.length-1;i>=0;i--) if(ids.includes(nodes[i].id)) nodes.splice(i,1);
-      nodes.push({id:sid,width:W+2*SP,height:hgt,x:nodes.length*10,y});
+      nodes.push({id:sid,width:SW,height:hgt,x:nodes.length*10,y});
       const id='c'+sid; edges.push({id,sources:[src],targets:[sid]});
       meta[id]={kind:'child',s:best(leaves.map(x=>x.s)),a:src,b:sid,members:[...leaves[0].ps,...ids]};
       list=list.filter(x=>!ids.includes(x.c));
@@ -179,16 +184,30 @@ function rounded(pts,r=7){ let d=`M${pts[0].x} ${pts[0].y}`;
   const l=pts[pts.length-1]; return d+` L${l.x} ${l.y}`; }
 function wrap(s,n){const w=s.split(' '),L=[];let c='';w.forEach(x=>{if((c+' '+x).trim().length>n&&c){L.push(c);c=x}else c=(c+' '+x).trim()});L.push(c);return L.length>2?[L[0],L.slice(1).join(' ').slice(0,n-1)+'…']:L;}
 
-async function draw(){
+// notched-corner archival frame
+function frame(x,y,w,h,r){return `M${x+r} ${y}H${x+w-r}A${r} ${r} 0 0 0 ${x+w} ${y+r}V${y+h-r}A${r} ${r} 0 0 0 ${x+w-r} ${y+h}H${x+r}A${r} ${r} 0 0 0 ${x} ${y+h-r}V${y+r}A${r} ${r} 0 0 0 ${x+r} ${y}Z`;}
+function fitText(t,maxW,minPx){const full=t.textContent;let s=parseFloat(getComputedStyle(t).fontSize);
+  while(t.getComputedTextLength()>maxW&&s>minPx){s-=.5;t.style.fontSize=s+'px';}
+  let c=full;while(c.length>1&&t.getComputedTextLength()>maxW){c=c.slice(0,-1);t.textContent=c.trimEnd()+'…';}
+  return t;}
+const textW=t=>t.getComputedTextLength();
+async function draw(){ await document.fonts.ready;
   msg.style.display='flex';
   const {graph,unions,meta,stacks}=buildGraph();
   let res; try{ res=await elk.layout(graph); }catch(err){ msg.textContent='Błąd układu: '+err; return; }
   msg.style.display='none';
   gE.innerHTML='';gU.innerHTML='';gN.innerHTML='';
   const pos=new Map(res.children.map(n=>[n.id,n]));
+  const inStack=new Set(); const stackRows=[];
   stacks.forEach(s=>{const n=pos.get(s.id); if(!n) return;
-    mk('rect',{class:'stack',x:n.x,y:n.y,width:n.width,height:n.height,rx:14,fill:'#f6f7f9',stroke:'#d6d9de','stroke-width':1.2,'data-ends':s.members.join(' ')},gU);
-    s.members.forEach((id,i)=>pos.set(id,{x:n.x+SP,y:n.y+SP+i*(H+SG),width:W,height:H}));});
+    s.members.forEach(id=>inStack.add(id));
+    const g=mk('g',{transform:`translate(${n.x},${n.y})`},gU);
+    mk('path',{d:frame(0,0,SW,n.height,8),fill:css('--stack'),stroke:css('--line'),'stroke-width':1.1},g);
+    mk('path',{d:frame(4,4,SW-8,n.height-8,6),fill:'none',stroke:css('--line'),'stroke-width':.6,'stroke-dasharray':'2 2'},g);
+    const t=mk('text',{class:'fl',x:SW/2,y:3,'text-anchor':'middle',fill:css('--muted')},g); t.textContent='DZIECI · '+s.members.length;
+    const lw=textW(t)+16; g.insertBefore(mk('rect',{x:SW/2-lw/2,y:-3,width:lw,height:7,fill:css('--bg')}),t);
+    const tt=mk('title',{},g); tt.textContent='Dzieci, o których potomkach nic nie wiadomo';
+    s.members.forEach((id,i)=>stackRows.push({id,x:n.x,y:n.y+SH+i*RH,last:i===s.members.length-1}));});
   model={pos,meta,unions};
   // edges
   const order={relative:0,possible:1,child:2,spouse:3};
@@ -209,22 +228,47 @@ async function draw(){
   unions.forEach(u=>{const n=pos.get(u.id); if(!n) return;
     mk('circle',{class:'union','data-ends':u.members.join(' '),cx:n.x+U/2,cy:n.y+U/2,r:4.5,fill:'#fff',stroke:css('--spouse'),'stroke-width':2},gU);});
   // people
-  G.people.forEach(p=>{ const n=pos.get(p.id); if(!n) return;
+  G.people.forEach(p=>{ const n=pos.get(p.id); if(!n||inStack.has(p.id)) return;
     const hyp=isHyp(p)||isNN(p), prob=!hyp&&p.status==='P';
     const g=mk('g',{class:'node '+p.status+(isNN(p)?' NN':''),'data-id':p.id,transform:`translate(${n.x},${n.y})`},gN);
     const col=css(lineCol[p.line]||'--line');
-    if(direct.has(p.id)) mk('rect',{x:-4.5,y:-4.5,width:W+9,height:H+9,rx:13,fill:'none',stroke:css('--gold'),'stroke-width':3},g);
-    mk('rect',{class:'box',width:W,height:H,rx:10,fill:hyp?'url(#hatch)':'#fff',stroke:hyp?css('--H'):col,'stroke-width':hyp?1.6:(prob?1.3:1.8),'stroke-opacity':prob?.6:1,'stroke-dasharray':hyp?'5 4':'',filter:''},g);
-    if(!hyp) mk('rect',{x:0,y:0,width:6,height:H,rx:3,fill:col,opacity:prob?.55:1},g);
-    const L=wrap(p.name,24);
-    L.forEach((l,i)=>{const t=mk('text',{class:'nm',x:14,y:L.length===1?25:19+i*15},g); t.textContent=l;});
-    const d=mk('text',{class:'dt',x:14,y:L.length===1?43:H-7},g); d.textContent=(p.dates||'').slice(0,32);
+    const dir=direct.has(p.id), cx=W/2, fr=css(dir?'--gold':'--line'), lc=hyp?css('--H'):col;
+    mk('path',{class:'box',d:frame(0,0,W,H,8),filter:hyp?'':'url(#sh)',fill:hyp?'url(#hatch)':css('--card'),stroke:hyp?css('--H'):fr,'stroke-width':hyp?1.2:(dir?1.5:1.1),'stroke-dasharray':hyp?'5 4':'','stroke-opacity':prob?.75:1},g);
+    if(!hyp) mk('path',{d:frame(4,4,W-8,H-8,6),fill:'none',stroke:fr,'stroke-width':.6,'stroke-opacity':dir?.9:.75},g);
+    if(dir) mk('path',{d:`M${cx} ${H-4}l4 4l-4 4l-4 -4z`,fill:css('--gold')},g);
+    const lab=hyp?'HIPOTEZA':(lineLab[p.line]||'');
+    if(lab){ const lt=mk('text',{class:'fl',x:cx,y:3,'text-anchor':'middle',fill:lc},g); lt.textContent=lab;
+      const lw=textW(lt)+16; g.insertBefore(mk('rect',{x:cx-lw/2,y:-3,width:lw,height:7,fill:css('--bg')}),lt);
+      mk('circle',{cx:cx-lw/2+3,cy:0,r:1.4,fill:lc},g); mk('circle',{cx:cx+lw/2-3,cy:0,r:1.4,fill:lc},g); }
+    const maxW=W-28; let two=false; const t1=mk('text',{class:'nm',x:cx,y:37,'text-anchor':'middle','font-style':hyp?'italic':''},g); t1.textContent=p.name;
+    if(textW(t1)>maxW){const w=p.name.split(' '); let best=null;
+      for(let i=1;i<w.length;i++){const a=w.slice(0,i).join(' '),b=w.slice(i).join(' '),sc=Math.max(a.length,b.length); if(!best||sc<best.sc) best={a,b,sc};}
+      if(best){two=true; t1.textContent=best.a; t1.setAttribute('y',29); const t2=mk('text',{class:'nm',x:cx,y:46,'text-anchor':'middle','font-style':hyp?'italic':''},g); t2.textContent=best.b; fitText(t2,maxW,13);}}
+    fitText(t1,maxW,13);
+    const d=mk('text',{class:'dt',x:cx,y:H-12,'text-anchor':'middle'},g); d.textContent=p.dates||'';
+    const parts=(p.dates||'').split(' – ');
+    if(textW(d)>W-24&&!two&&parts.length===2){ t1.setAttribute('y',31); d.textContent=parts[0]; d.setAttribute('y',H-23); fitText(d,W-24,9);
+      const d2=mk('text',{class:'dt',x:cx,y:H-11,'text-anchor':'middle'},g); d2.textContent='– '+parts[1]; fitText(d2,W-24,9); }
+    else fitText(d,W-24,9);
+    const ti=mk('title',{},g); ti.textContent=p.name+(p.dates?' · '+p.dates:'');
     // status badge
-    const bx=W-12, by=12;
-    if(p.status==='C'){mk('circle',{cx:bx,cy:by,r:8,fill:css('--C')},g); mk('path',{d:`M${bx-3.6} ${by} l2.6 2.7 l4.8 -5`,stroke:'#fff','stroke-width':2,fill:'none','stroke-linecap':'round','stroke-linejoin':'round'},g);}
-    else if(p.status==='FAM'){mk('circle',{cx:bx,cy:by,r:8,fill:css('--FAM')},g); const t=mk('text',{x:bx,y:by+3.8,'text-anchor':'middle','font-size':10,'font-weight':700,fill:'#fff'},g); t.textContent='R';}
-    else if(p.status==='P'){mk('circle',{cx:bx,cy:by,r:8,fill:css('--P'),opacity:.85},g); const t=mk('text',{x:bx,y:by+4,'text-anchor':'middle','font-size':11,'font-weight':700,fill:'#fff'},g); t.textContent='≈';}
-    else {mk('circle',{cx:bx,cy:by,r:8,fill:'#fff',stroke:css('--H'),'stroke-width':1.6,'stroke-dasharray':'2.5 2'},g); const t=mk('text',{x:bx,y:by+4,'text-anchor':'middle','font-size':11,'font-weight':700,fill:css('--H')},g); t.textContent='?';}
+    const bx=W-1, by=1;
+    if(p.status==='C'){mk('circle',{cx:bx,cy:by,r:7,fill:css('--C')},g); mk('path',{d:`M${bx-3.6} ${by} l2.6 2.7 l4.8 -5`,stroke:'#fff','stroke-width':1.7,fill:'none','stroke-linecap':'round','stroke-linejoin':'round'},g);}
+    else if(p.status==='FAM'){mk('circle',{cx:bx,cy:by,r:7,fill:css('--FAM')},g); const t=mk('text',{x:bx,y:by+3.8,'text-anchor':'middle','font-size':9,'font-weight':700,fill:'#fff'},g); t.textContent='R';}
+    else if(p.status==='P'){mk('circle',{cx:bx,cy:by,r:7,fill:css('--P'),opacity:.85},g); const t=mk('text',{x:bx,y:by+4,'text-anchor':'middle','font-size':11,'font-weight':700,fill:'#fff'},g); t.textContent='≈';}
+    else {mk('circle',{cx:bx,cy:by,r:7,fill:css('--card'),stroke:css('--H'),'stroke-width':1.6,'stroke-dasharray':'2.5 2'},g); const t=mk('text',{x:bx,y:by+4,'text-anchor':'middle','font-size':11,'font-weight':700,fill:css('--H')},g); t.textContent='?';}
+  });
+  stackRows.forEach(r=>{const p=P.get(r.id); const hyp=isHyp(p)||isNN(p);
+    const g=mk('g',{class:'node row '+p.status,'data-id':p.id,transform:`translate(${r.x},${r.y})`},gN);
+    mk('rect',{class:'hit',x:7,y:1,width:SW-14,height:RH-2,rx:6},g);
+    const dc={C:css('--C'),FAM:css('--FAM'),P:css('--P')}[p.status];
+    if(hyp) mk('circle',{cx:17,cy:RH/2,r:3.2,fill:'#fff',stroke:css('--H'),'stroke-width':1.4,'stroke-dasharray':'2 1.5'},g);
+    else mk('circle',{cx:17,cy:RH/2,r:3.2,fill:dc||css('--muted')},g);
+    const yrs=(p.dates||'').match(/\d{4}/g); const yt=yrs?yrs.join('–'):'';
+    let yw=0; if(yt){const y=mk('text',{class:'ry',x:SW-14,y:RH/2+3.5,'text-anchor':'end'},g); y.textContent=yt; yw=textW(y)+8;}
+    const t=mk('text',{class:'rn',x:27,y:RH/2+4,'font-style':hyp?'italic':''},g); t.textContent=p.name; fitText(t,SW-27-14-yw,12);
+    if(!r.last) mk('line',{x1:12,x2:SW-12,y1:RH,y2:RH,stroke:css('--line'),'stroke-width':.6},g);
+    const ti=mk('title',{},g); ti.textContent=p.name+(p.dates?' · '+p.dates:'');
   });
   highlight();
 }
